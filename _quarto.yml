@@ -10,6 +10,9 @@ website:
         text: Home
       - sidebar:maps
       
+  sidebar: 
+  - id: Maps
+      
 page-footer:
     left: |
       &copy; Siri Sagedahl, 2024<br>

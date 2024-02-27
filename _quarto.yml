@@ -9,7 +9,6 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
-      sidebar: Projects
       
 page-footer:
     left: |

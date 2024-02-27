@@ -333,10 +333,9 @@ Attaching package: 'fec16'</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion of Rep votes by district</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>wi_results <span class="sc">|&gt;</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(district, r_prop, d_prop, other_prop, winner) <span class="sc">|&gt;</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(r_prop))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>wi_results <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(district, r_prop, d_prop, other_prop, winner) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(r_prop))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 5
   district r_prop d_prop other_prop winner    
@@ -375,7 +374,7 @@ Available layers:
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DISTRICT =</span> <span class="fu">parse_number</span>(<span class="fu">as.character</span>(DISTRICT)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `districts113' from data source 
-  `/private/var/folders/3d/rdmztnxs0wjd_1j0j3ddjhnr0000gn/T/Rtmp7iiwJF/districts113/districtShapes' 
+  `/private/var/folders/3d/rdmztnxs0wjd_1j0j3ddjhnr0000gn/T/RtmpuKoIh2/districts113/districtShapes' 
   using driver `ESRI Shapefile'
 Simple feature collection with 436 features and 15 fields (with 1 geometry empty)
 Geometry type: MULTIPOLYGON

@@ -40,13 +40,14 @@ results_house |>
   group_by(state, district_id) |>
   summarize(N = n())
 ```
+This table takes data from the Federal Election Commission's 2015-2016 election cycle on the 2016 House general election results.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 district_elections <- results_house |>
   mutate(district = parse_number(district_id)) |>
   group_by(state, district) |>
   summarize(
-    #N = n(), 
+    N = n(), 
     total_votes = sum(general_votes, na.rm = TRUE),
     d_votes = sum(ifelse(party == "DEM", general_votes, 0), na.rm = TRUE),
     r_votes = sum(ifelse(party == "REP", general_votes, 0), na.rm = TRUE),
@@ -64,13 +65,14 @@ wi_results <- district_elections |>
 wi_results |>                  
   select(-state)
 ```
+This table shows the districts of Wisconsin with their total votes, and divided into votes for a Democratic candidate, votes for a Republican candidate, and votes for candidates affiliated with another party. Note that some vote counts are zero due to the fact that there were no candidates of that party running in that district.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 wi_results |>
   skim(total_votes) |>
   select(-na)
 ```
-
+A distribution of total votes across all 8 districts in Wisconsin
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #| message: false
@@ -87,12 +89,14 @@ wi_results |>
     r_prop = state_r / state_votes
   )
 ```
+This table shows party proportion within the whole state of Wisconsin.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 wi_results |>
   select(district, r_prop, d_prop, other_prop, winner) |>
   arrange(desc(r_prop))
 ```
+Each district ranked based on Republican proportion.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(sf)
@@ -111,10 +115,6 @@ districts <- st_read(dsn_districts, layer = "districts113") |>
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-head(districts, width = Inf)
-```
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
 class(districts)
 ```
 
@@ -125,6 +125,7 @@ wi_shp |>
   st_geometry() |>
   plot(col = gray.colors(nrow(wi_shp)))
 ```
+Note the shapes of the 8 Wisconsin districts.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 wi_merged <- wi_shp |>
@@ -143,6 +144,7 @@ wi <- ggplot(data = wi_merged, aes(fill = winner)) +
   theme_void()
 wi
 ```
+This visualization shows the 8 Wisconsin districts along with the party affiliated with the winning candidate.
 
 ```{r}
 wi +
@@ -150,9 +152,10 @@ wi +
   scale_fill_distiller(
     "Proportion\nRepublican", 
     palette = "RdBu", 
-    limits = c(0.2, 0.8)
+    limits = c(0, 1)
   )
 ```
+This visualization is very similar to the previous, but with color opacity representing the size of proportion of the winning party. In other words, the colors are darker when the proprtion of that party is higher.
 
 ```{r}
 library(leaflet)
@@ -169,4 +172,4 @@ leaflet_wi <- leaflet(wi_merged) |>
 leaflet_wi
 
 ```
-
+This leaflet plot takes a look at relative proportion of votes per district without the district number labels. Additionally, this plot is interactive, allowing you to zoom in and out of the map, assessing shape and proportion attached to each district.

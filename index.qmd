@@ -3,8 +3,8 @@ title: "Siri Sagedahl"
 about:
   id: intro-heading
   template: trestles
-  #image: Downloads/"flowers.jpeg"
-  #image-shape: round
+  image: Downloads/"flowers.jpeg"
+  image-shape: round
   links:
     - icon: envelope
       href: mailto:sageda2@stolaf.edu

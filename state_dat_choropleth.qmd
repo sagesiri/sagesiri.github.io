@@ -1,5 +1,5 @@
 ---
-title: "state_dat_choropleth"
+title: "State Data Choropleth"
 author: "Siri Sagedahl"
 format: html
 editor: visual
@@ -32,5 +32,5 @@ us_states |>
   scale_fill_gradient2() 
 ```
 
-From this chloropleth map displaying the percentage of states' population without health insurance, we can observe that there is a general pattern of the southern United States having a greater percentage uninsured. The lowest percentage of uninsured population is Massachusetts while the greatest percentage of unisured population is Texas.
+From this choropleth map displaying the percentage of states' population without health insurance, we can observe that there is a general pattern of the southern United States having a greater percentage uninsured. The lowest percentage of uninsured population is Massachusetts while the greatest percentage of unisured population is Texas.
 

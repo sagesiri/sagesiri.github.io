@@ -1,5 +1,5 @@
 ---
-title: "Project 1: Maps"
+title: "Gerrymandering in Wisconsin?"
 author: "Siri Sagedahl"
 format: html
 editor: visual
@@ -151,3 +151,5 @@ leaflet_wi
 
 ```
 This leaflet plot takes a look at relative proportion of votes per district without the district number labels. Additionally, this plot is interactive, allowing you to zoom in and out of the map, assessing shape and proportion attached to each district.
+
+From this data visualization, we can't confirm or deny gerrymandering within the state of Wisconsin. There are some oddly shaped districts that are reportedly 100% Democratic (due to a Democratic candidate being the only party running). In order to confirm gerrymandering, we would need to further analyze proportions of parties within districts.

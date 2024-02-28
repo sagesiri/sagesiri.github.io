@@ -5,6 +5,8 @@ project:
 website:
   title: "Siri Sagedahl"
   navbar:
+    background: primary
+    search: true
     left:
       - href: index.qmd
         text: Home
@@ -15,6 +17,7 @@ website:
     title: "Maps"
     contents:
     - mini_project_1.qmd
+    - state_dat_choropleth.qmd
     
 page-footer:
     left: |

@@ -11,28 +11,6 @@ library(mdsr)
 library(viridis)
 ```
 
-```{r}
-library(poliscidata)
-library(maps)
-
-us_states <- map_data("state")
-state_data <- as_tibble(poliscidata::states) |>
-  mutate(state_name = str_squish(str_to_lower(as.character(state))))
-
-us_states |>
-  mutate(region = str_replace(region, " ", "")) |>
-  full_join(state_data, join_by("region" == "state_name")) |>
-  ggplot(mapping = aes(x = long, y = lat,
-                          group = group)) + 
-  geom_polygon(aes(fill = uninsured_pct), color = "black") + 
-  labs(fill = "Percentage Without Health Insurance",
-       title = "Percentage of Population Without Health Insurance") +
-  coord_map() + 
-  theme_bw() +  
-  scale_fill_gradient2() 
-```
-From this chloropleth map displaying the percentage of states' population without health insurance, we can observe that there is a general pattern of the southern United States having a greater percentage uninsured. The lowest percentage of uninsured population is Massachusetts while the greatest percentage of unisured population is Texas.
-
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(fec16)
 

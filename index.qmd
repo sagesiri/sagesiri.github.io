@@ -3,7 +3,7 @@ title: "Siri Sagedahl"
 about:
   id: intro-heading
   template: trestles
-  #image: images/profilepic.jpg
+  #image: Downloads/"flowers.jpeg"
   #image-shape: round
   links:
     - icon: envelope

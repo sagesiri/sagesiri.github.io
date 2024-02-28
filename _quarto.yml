@@ -15,7 +15,7 @@ website:
     title: "Maps"
     contents:
     - mini_project_1.qmd
-      
+    
 page-footer:
     left: |
       &copy; Siri Sagedahl, 2024<br>
@@ -26,7 +26,7 @@ page-footer:
 
 format:
   html:
-    theme: quartz
+    theme: lux
     css: styles.css
     toc: true
 

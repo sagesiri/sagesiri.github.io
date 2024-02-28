@@ -40,6 +40,9 @@ us_states |>
 From this chloropleth map displaying the percentage of states' population without health insurance, we can observe that there is a general pattern of the southern United States having a greater percentage uninsured. The lowest percentage of uninsured population is Massachusetts while the greatest percentage of unisured population is Texas.
 
 ```{r}
+#| message: false
+#| warning: false
+
 library(fec16)
 
 results_house |>
@@ -48,6 +51,8 @@ results_house |>
 ```
 
 ```{r}
+#| message: false
+#| warning: false
 district_elections <- results_house |>
   mutate(district = parse_number(district_id)) |>
   group_by(state, district) |>
@@ -72,11 +77,15 @@ wi_results |>
 ```
 
 ```{r}
+#| message: false
+#| warning: false
 wi_results |>
   skim(total_votes) |>
   select(-na)
 ```
 ```{r}
+#| message: false
+#| warning: false
 wi_results |>
   summarize(
     N = n(), 
@@ -91,12 +100,16 @@ wi_results |>
 ```
 
 ```{r}
+#| message: false
+#| warning: false
 wi_results |>
   select(district, r_prop, d_prop, other_prop, winner) |>
   arrange(desc(r_prop))
 ```
 
 ```{r}
+#| message: false
+#| warning: false
 library(sf)
 src <- "http://cdmaps.polisci.ucla.edu/shp/districts113.zip"
 lcl_zip <- fs::path(tempdir(), "districts113.zip")
@@ -108,17 +121,25 @@ st_layers(dsn_districts)
 ```
 
 ```{r}
+#| message: false
+#| warning: false
 districts <- st_read(dsn_districts, layer = "districts113") |>
   mutate(DISTRICT = parse_number(as.character(DISTRICT)))
 ```
 ```{r}
+#| message: false
+#| warning: false
 head(districts, width = Inf)
 ```
 
 ```{r}
+#| message: false
+#| warning: false
 class(districts)
 ```
 ```{r}
+#| message: false
+#| warning: false
 wi_shp <- districts |>
   filter(STATENAME == "Wisconsin")
 wi_shp |>
@@ -127,6 +148,8 @@ wi_shp |>
 ```
 
 ```{r}
+#| message: false
+#| warning: false
 wi_merged <- wi_shp |>
   st_transform(4326) |>
   inner_join(wi_results, by = c("DISTRICT" = "district"))
@@ -134,6 +157,7 @@ head(wi_merged, width = Inf)
 ```
 
 ```{r}
+#| warning: false
 library(ggspatial)
 wi <- ggplot(data = wi_merged, aes(fill = winner)) +
   annotation_map_tile(zoom = 6, type = "osm", progress = "none") + 
@@ -144,4 +168,32 @@ wi <- ggplot(data = wi_merged, aes(fill = winner)) +
 wi
 ```
 
+```{r}
+#| warning: false
+wi +
+  aes(fill = r_prop) + 
+  scale_fill_distiller(
+    "Proportion\nRepublican", 
+    palette = "RdBu", 
+    limits = c(0.2, 0.8)
+  )
+```
+
+```{r}
+#| warning: false
+# A leaflet map can allow us to zoom in and see where major cities fit, etc.
+library(leaflet)
+pal <- colorNumeric(palette = "RdBu", domain = c(0, 1))
+
+leaflet_wi <- leaflet(wi_merged) |>
+  addTiles() |>
+  addPolygons(
+    weight = 1, fillOpacity = 0.7, 
+    color = ~pal(1 - r_prop),   # so red association with Reps
+    popup = ~paste("District", DISTRICT, "</br>", round(r_prop, 4))
+  ) |>                          # popups show prop Republican
+  setView(lng = -80, lat = 35, zoom = 7)
+leaflet_wi
+
+```
 

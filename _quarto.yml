@@ -11,7 +11,10 @@ website:
       - sidebar:maps
       
   sidebar: 
-  - id: Maps
+  - id: maps
+    title: "Maps"
+    contents:
+    - mini_project_1.qmd
       
 page-footer:
     left: |

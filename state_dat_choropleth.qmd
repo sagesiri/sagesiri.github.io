@@ -9,28 +9,28 @@ editor: visual
 library(tidyverse)
 library(mdsr)
 library(viridis)
+census <- read.csv("/Users/sirisagedahl/Downloads/NST-EST2023-ALLDATA.csv")
 ```
 
 ```{r}
-library(poliscidata)
 library(maps)
 
 us_states <- map_data("state")
-state_data <- as_tibble(poliscidata::states) |>
-  mutate(state_name = str_squish(str_to_lower(as.character(state))))
+census_data <- census |> 
+  filter(STATE > 0) |>
+  mutate(NAME = tolower(NAME))
 
 us_states |>
-  mutate(region = str_replace(region, " ", "")) |>
-  full_join(state_data, join_by("region" == "state_name")) |>
+  full_join(census_data, join_by("region" == "NAME")) |>
   ggplot(mapping = aes(x = long, y = lat,
                           group = group)) + 
-  geom_polygon(aes(fill = uninsured_pct), color = "black") + 
-  labs(fill = "Percentage Without Health Insurance",
-       title = "Percentage of Population Without Health Insurance") +
+  geom_polygon(aes(fill = BIRTHS2023), color = "black") + 
+  labs(fill = "Births in 2023",
+       title = "Births in 2023 by U.S. State") +
   coord_map() + 
   theme_bw() +  
   scale_fill_gradient2() 
 ```
 
-From this choropleth map displaying the percentage of states' population without health insurance, we can observe that there is a general pattern of the southern United States having a greater percentage uninsured. The lowest percentage of uninsured population is Massachusetts while the greatest percentage of unisured population is Texas.
+From this choropleth map displaying the number of births in 2023, we can see that California and Texas have the highest number of births. This makes sense because, in 2023, California and Texas were the top two most populous states according to the U.S. census. Therefore, the larger population, the more opportunity for giving birth.
 

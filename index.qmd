@@ -3,32 +3,28 @@ title: "Siri Sagedahl"
 about:
   id: intro-heading
   template: trestles
-  image: "/Users/sirisagedahl/Downloads/flower.png"
+  image: "/Users/sirisagedahl/Downloads/flowers.png"
   image-shape: round
   links:
     - icon: envelope
       href: mailto:sageda2@stolaf.edu
     - icon: github
       href: https://github.com/sagesiri
-
 ---
 
-:::{#intro-heading}
-
+::: {#intro-heading}
 ## Siri Sagedahl
 
-Math, Statistics & Data Science Student <br>
-at [St. Olaf College](https://wp.stolaf.edu/)
+Math, Statistics & Data Science Student <br> at [St. Olaf College](https://wp.stolaf.edu/)
 
 ### Education
 
-BA in Math with Statistics & Data Science concentration<br>
-2026 | St. Olaf College
+BA in Math with Statistics & Data Science concentration<br> 2026 \| St. Olaf College
 :::
 
 ### Get in Touch
 
-**Email**: <a href='mailto:sageda2@stolaf.edu'>sageda2@stolaf.edu</a>
+**Email**: <a href='mailto:sageda2@stolaf.edu'>sageda2\@stolaf.edu</a>
 
 **Address**: 4014 Auburn Dr, Hopkins MN, 55305
 

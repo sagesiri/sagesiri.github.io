@@ -1,5 +1,5 @@
 ---
-title: "Mini Project 2"
+title: "Power Curves"
 author: "Siri Sagedahl"
 ---
 

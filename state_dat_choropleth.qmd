@@ -5,7 +5,7 @@ format: html
 editor: visual
 ---
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r}
 library(tidyverse)
 library(mdsr)
 library(viridis)
@@ -33,4 +33,3 @@ us_states |>
 ```
 
 From this choropleth map displaying the number of births in 2023, we can see that California and Texas have the highest number of births. This makes sense because, in 2023, California and Texas were the top two most populous states according to the U.S. census. Therefore, the larger population, the more opportunity for giving birth.
-

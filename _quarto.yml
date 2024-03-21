@@ -14,10 +14,11 @@ website:
       
   sidebar: 
   - id: maps
-    title: "Maps"
+    title: "Projects"
     contents:
     - mini_project_1.qmd
     - state_dat_choropleth.qmd
+    - mini_project2.qmd
     
 page-footer:
     left: |

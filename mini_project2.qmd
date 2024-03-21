@@ -1,0 +1,120 @@
+---
+title: "Mini Project 2"
+author: "Siri Sagedahl"
+---
+
+```{r, echo=FALSE}
+library(ggplot2)
+```
+
+
+## Project Description
+
+This project is meant to show how the null hypothesis and sample size affects the power of a particular study into the prevalence of a bio-marker called PARP. Below is an email asking for guidance on the number of participants to have in a certain study:
+
+> Do you mind if I ask for some statistical guidance? This is probably a pretty straightforward question but I'm struggling with it a bit.
+
+> One of our docs wants to conduct a study looking at a biomarker called PARP. The hypothesis is that expression of PARP is correlated with decreased survival in breast cancer. The test will be done on archived tissue and will be read as either positive or negative. The hypothesis is that patients who overexpress PARP will have a response rate to chemotherapy of 10% and that non-expressers will have a response rate of 25%.
+
+> The proposed patient population is 220 patients. This is the power analysis:
+
+> Sample Size for Response Rate (2-sample comparison, 1-sided, alpha=0.05)
+
+> Power = 80
+
+> Null Hypothesis (H0) = .05 (Response Rate for Overexpression Group)
+
+> Alternative Hypothesis (H1) = .25 (Response Rate for Normal Expression Group)
+
+> Sample Size per Group (STPlan) = 35
+
+> Sample Size per Group (nQuery) = 39
+
+> Power = 85
+
+> Null Hypothesis (H0) = .05 (Response Rate for Overexpression Group)
+
+> Alternative Hypothesis (H1) = .25 (Response Rate for Normal Expression Group)
+
+> Sample Size per Group (STPlan) = 41
+
+> Sample Size per Group (nQuery) = 45
+
+> Power = 80
+
+> Null Hypothesis (H0) = .10 (Response Rate for Overexpression Group)
+
+> Alternative Hypothesis (H1) = .25 (Response Rate for Normal Expression Group)
+
+> Sample Size per Group (STPlan) = 76
+
+> Sample Size per Group (nQuery) = 79
+
+> etc. (Many more runs of their power software with different levels of power and different assumptions about HO and H1)
+
+> Now the unknown variable is what proportion of tumors will express PARP. From looking at this it appears that he is assuming that the sample size will be equal in each group but in fact, it appears that PARP expression may be present in 80-90% of tumors. Let's assume that 80% of tumors are expressers and 20% are non-expressers. I'm not crazy in assuming that will have a significant impact on our needed study size to show a p value of 0.05 at 80% power with the above assumptions, am I?
+
+## Code
+
+```{r, warning=FALSE}
+power_analysis <- function(n_per_group, prevalence, true_response_expressors, true_response_nonexpressors, alpha = 0.05) {
+  n_expressors <- round(n_per_group * prevalence)
+  n_nonexpressors <- n_per_group - n_expressors
+  responders_expressors <- rbinom(1, size = n_expressors, prob = true_response_expressors)
+  responders_nonexpressors <- rbinom(1, size = n_nonexpressors, prob = true_response_nonexpressors)
+  
+  observed_table <- matrix(c(responders_expressors, responders_nonexpressors,
+                              n_expressors - responders_expressors, n_nonexpressors - responders_nonexpressors), nrow = 2, byrow = TRUE)
+  chisq_stat <- chisq.test(observed_table, correct = TRUE)$statistic
+  p_value <- 1 - pchisq(chisq_stat, df = 1)
+  
+  power <- ifelse(p_value < alpha, 1, 0)
+  return(power)
+}
+
+alpha <- 0.05
+desired_power <- 0.8
+prevalence_options <- c(0.2, 0.4, 0.6, 0.8)
+true_response_expressors <- 0.1
+true_response_nonexpressors <- 0.25
+min_sample_size <- 100
+
+
+power_curves <- list()
+
+for (prevalence in prevalence_options) {
+  sample_sizes <- seq(from = min_sample_size, to = 500, by = 20)
+  power_values <- vector("double", length = length(sample_sizes))
+  
+  for (i in 1:length(sample_sizes)) {
+    sample_size <- sample_sizes[i]
+    power <- 0
+    
+    num_sims <- 1000
+    for (j in 1:num_sims) {
+      power <- power + power_analysis(sample_size, prevalence, true_response_expressors, true_response_nonexpressors, alpha)
+    }
+    power_values[i] <- power / num_sims
+  }
+  list_num <- round(prevalence / .2)
+  power_curves[[list_num]] <- data.frame(sample_size = sample_sizes, power = power_values, prevalence = prevalence)
+}
+
+
+all_power_curves <- do.call(rbind, power_curves)
+
+all_power_curves |>
+  ggplot(aes(x = sample_size, y = power, color = factor(prevalence))) +
+  geom_line(linewidth = 0.7) +
+  labs(title = "Power Curves for Different Prevalence Levels (Chi-Square Test)",
+       x = "Sample Size per Group",
+       y = "Power",
+       color = "Prevalence") +
+  geom_hline(yintercept = desired_power, linetype = "dashed", color = "red") +
+  theme_bw()
+```
+
+## Interpretation:
+
+  This graph shows the impact of the null hypothesis, in this case being the assumed prevalence of of PARP bio-marker expression in tumors, and the sample size on the study's relative power. If we assume the bio-marker prevalence to be 0.2, we need a sample size of about 370 to achieve 80% power. If we assume the prevalence to be 0.4 or 0.6, the sample size per group must be around 225, and a prevalence of 0.8 must have a sample size around 310 to achieve 80% power. 
+  Thus, to answer the physician's question, the assumed proportion of PARP-expressing tumors has a significant impact on the needed sample size in order to maintain power.

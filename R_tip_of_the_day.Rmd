@@ -4,10 +4,10 @@ author: "Siri Sagedahl"
 date: "2024-03-04"
 output: html_document
 ---
+
 ```{r, message=FALSE}
 library(tidyverse)
 ```
-
 
 ```{r}
 ggplot(faithful, aes(x = eruptions, y = waiting)) +
@@ -88,4 +88,3 @@ dsmall |>
                   contour = FALSE) +
   labs(x = "Length (mm)", y = "Width (mm)", title = "Size of Diamond by Cut")
 ```
-

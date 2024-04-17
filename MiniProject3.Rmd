@@ -1,0 +1,76 @@
+---
+title: "Mini Project 3"
+author: "Siri Sagedahl"
+date: "2024-04-16"
+output: html_document
+---
+
+```{r}
+library(RTextTools)
+library(SentimentAnalysis)
+library(stringr)
+library(tidyverse)
+library(tidytext)
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
+
+data(NYTimes)
+NYT_headlines <- as_tibble(NYTimes)
+```
+
+```{r}
+NYT_headlines <- NYT_headlines |>
+  mutate(modified_title = str_replace_all(NYT_headlines$Title, "[:|;|-]", ""))
+
+headline_df <- str_split(NYT_headlines$modified_title, "\\s+")
+
+hl_byword <- data.frame(headline = rep(NYT_headlines$modified_title, sapply(headline_df, length)),
+                        word = unlist(headline_df)) 
+full_df <- hl_byword |>
+  left_join(NYT_headlines, join_by("headline" == "Title"))
+```
+
+```{r}
+words_96 <- full_df |>
+  mutate(year = str_extract(Date, "\\d\\d$"),
+         word = tolower(word)) |>
+  anti_join(get_stopwords(source = "snowball")) |>
+  filter(year == "96")|>
+  count(word) |>
+  arrange(desc(n))
+```
+```{r}
+words <- function(data, num_year) {
+  data |>
+   mutate(year = str_extract(Date, "\\d\\d$"),
+         word = tolower(word)) |>
+  anti_join(get_stopwords(source = "snowball")) |>
+  filter(year == num_year)|>
+  count(word) |>
+  arrange(desc(n))
+}
+
+words_96 <- words(full_df, "96")
+words_01 <- words(full_df, "01")
+words_06 <- words(full_df, "06")
+```
+
+## Most Commonly Used Words in 1996
+
+```{r}
+wordcloud(words = words_96$word, freq = words_96$n, colors = brewer.pal(8, "Dark2"))
+```
+
+## Most Commoonly Used Words in 2001
+
+```{r}
+wordcloud(words = words_01$word, freq = words_01$n, colors = brewer.pal(8, "Dark2"))
+```
+
+## Most Commonly Used Words in 2006
+
+```{r}
+wordcloud(words = words_06$word, freq = words_06$n, colors = brewer.pal(8, "Dark2"))
+```
+

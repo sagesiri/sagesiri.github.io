@@ -19,6 +19,7 @@ website:
     - mini_project_1.qmd
     - state_dat_choropleth.qmd
     - mini_project2.qmd
+    - miniproject3.qmd
     
 page-footer:
     left: |

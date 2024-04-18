@@ -1,0 +1,85 @@
+---
+title: "Mini Project 3"
+author: "Siri Sagedahl"
+---
+For my project, I decided to focus on answering he question: how does news reporting changed across a decade? To answer this question, I compiled New York Times headlines from 1996 - 2006 and analyzed how the most common words from headlines changed, as well as how the overal sentiment of headlines has changed over time.
+
+```{r}
+library(RTextTools)
+library(SentimentAnalysis)
+library(stringr)
+library(tidyverse)
+library(tidytext)
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
+
+data(NYTimes)
+NYT_headlines <- as_tibble(NYTimes)
+```
+
+```{r}
+NYT_headlines <- NYT_headlines |>
+  mutate(modified_title = str_replace_all(NYT_headlines$Title, "[:|;|-]", ""),
+         modified_title = tolower(modified_title))
+
+headline_df <- str_split(NYT_headlines$modified_title, "\\s+")
+
+hl_byword <- data.frame(headline = rep(NYT_headlines$Title, sapply(headline_df, length)),
+                        word = unlist(headline_df)) 
+full_df <- hl_byword |>
+  left_join(NYT_headlines, join_by("headline" == "Title"))
+```
+
+```{r}
+words <- function(data, num_year) {
+  data |>
+   mutate(year = str_extract(Date, "\\d\\d$"),
+         word = tolower(word)) |>
+  anti_join(get_stopwords(source = "snowball")) |>
+  filter(year == num_year)|>
+  count(word) |>
+  arrange(desc(n))
+}
+
+words_96 <- words(full_df, "96")
+words_01 <- words(full_df, "01")
+words_06 <- words(full_df, "06")
+```
+
+## Most Commonly Used Words in 1996
+
+```{r}
+wordcloud(words = words_96$word, freq = words_96$n, colors = brewer.pal(8, "Dark2"))
+```
+
+## Most Commoonly Used Words in 2001
+
+```{r}
+wordcloud(words = words_01$word, freq = words_01$n, colors = brewer.pal(8, "Dark2"))
+```
+
+## Most Commonly Used Words in 2006
+
+```{r}
+wordcloud(words = words_06$word, freq = words_06$n, colors = brewer.pal(8, "Dark2"))
+```
+From these three word clouds, we can detect mild differences in the most common words across years but all three contain very similar words.
+
+```{r}
+sentiment_score <- analyzeSentiment(full_df$modified_title)
+with_sentiment <- cbind(full_df, sentiment_score)
+
+with_sentiment |>
+  mutate(year = str_extract(Date, "\\d\\d$")) |>
+  group_by(year) |>
+  summarize(sentiment_per_year = mean(SentimentGI)) |>
+  ggplot(aes(x = year, y = sentiment_per_year)) +
+  geom_col() +
+  labs(x = "Year", y = "Sentiment Score", title = "Sentiment Score by Year") +
+  scale_x_discrete(limits = c("96", "97", "98", "99", "00", "01", "02", "03", "04", "05", "06"))
+```
+This visualization shows the sentiment scores across years. I was interested to see whether major tragedies in this decade, such as 9/11, would impact the sentiment of each year. Though the decrease from 2001 to 2002 might be explained by this event, it might be unreasonable to state that the minimum sentiment score in 2003 can be attributed to 9/11. Additionally, there wasn't really a pattern to this data, other than a steady decrease leading up to 2003 and an increase from then on. Note that 1998 does not have a score. Despite a deep dive into the values corresponding to 1998 trying to find any NA values, I couldn't see why this year differed and was unable to produce a sentiment score.
+
+
+

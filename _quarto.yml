@@ -10,7 +10,7 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - sidebar:maps
+      - sidebar:projects
       
   sidebar: 
   - id: maps
